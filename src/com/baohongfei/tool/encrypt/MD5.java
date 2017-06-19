@@ -5,8 +5,10 @@ package com.baohongfei.tool.encrypt;
  */
 public class MD5 {
 
-    public static String getMD5(byte[] source) {
-        String s = null;
+    public static String getMD5(String input) {
+        byte[] source = input.getBytes();
+
+        String retString = null;
         char hexDigits[] = { // 用来将字节转换成 16 进制表示的字符
                 '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd',
                 'e', 'f' };
@@ -27,15 +29,17 @@ public class MD5 {
                 // 为逻辑右移，将符号位一起右移
                 str[k++] = hexDigits[byte0 & 0xf]; // 取字节中低 4 位的数字转换
             }
-            s = new String(str); // 换后的结果转换为字符串
+            retString = new String(str); // 换后的结果转换为字符串
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return s;
+        return retString;
     }
 
     public static void main(String[] args) {
-        System.out.println(getMD5("123456".getBytes()));
+        String str = "123456";
+        System.out.println(getMD5(str));
+        System.out.println(getMD5(getMD5(str)));
     }
 }
