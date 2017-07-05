@@ -3,10 +3,10 @@ package com.baohongfei.dp.decorator;
 /**
  * Created by terry on 25/05/17.
  */
-public abstract class Decorator implements Component {
-    protected Component component;
+public abstract class AbstractDecorator implements IComponent {
+    protected IComponent component;
 
-    public Decorator(Component component){
+    public AbstractDecorator(IComponent component){
         super();
         this.component = component;
     }
