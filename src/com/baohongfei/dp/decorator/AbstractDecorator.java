@@ -7,7 +7,6 @@ public abstract class AbstractDecorator implements IComponent {
     protected IComponent component;
 
     public AbstractDecorator(IComponent component){
-        super();
         this.component = component;
     }
 
