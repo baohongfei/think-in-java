@@ -18,6 +18,5 @@ public class Lambda {
         final Clock clock = Clock.systemUTC();
         System.out.println( clock.instant() );
         System.out.println( clock.millis() );
-        Thread
     }
 }
