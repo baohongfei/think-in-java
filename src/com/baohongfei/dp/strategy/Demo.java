@@ -12,8 +12,8 @@ public class Demo {
 
     public static void main(String[] args) {
 
-        float totalMoney = 100F;
-        int totalPeople = 10;
+        int totalMoney = 100;
+        int totalPeople = 3;
 
         RedPacketsContext context = new RedPacketsContext();
 
