@@ -42,16 +42,20 @@ public class RandomStrategy implements RedPacketsStrategy {
         // 防止因为精确度问题导致手气最佳红包超过比例
         Collections.reverse(randomWeight);
 
+        // 每个人保底是 RedPacketsConfig.MIN_AVG_MONEY ，默认一分钱，剩下的钱，再拿去按权值随机分
+        BigDecimal toSplitMoney = totalMoney.subtract(RedPacketsConfig.MIN_AVG_MONEY.multiply(new BigDecimal(totalPeople)));
+
         // 累计分配的红包金额
-        BigDecimal splitMoney = new BigDecimal(0);
+        BigDecimal splitMoneySum = new BigDecimal(0);
         for (int i = 0; i < randomWeight.size() - 1; i++) {
             // 按权值分配金额
-            BigDecimal currentMoney = totalMoney.multiply(randomWeight.get(i)).divide(totalWeight, RedPacketsConfig.MONEY_SCALE, RoundingMode.DOWN);
-            currentMoney = ensureMinimum(currentMoney);
+            BigDecimal currentMoney = toSplitMoney.multiply(randomWeight.get(i)).divide(totalWeight, RedPacketsConfig.MONEY_SCALE, RoundingMode.DOWN);
+            // 加上每个人保底的 RedPacketsConfig.MIN_AVG_MONEY ，默认一分钱
+            currentMoney = currentMoney.add(RedPacketsConfig.MIN_AVG_MONEY);
             result.add(currentMoney);
-            splitMoney = splitMoney.add(currentMoney);
+            splitMoneySum = splitMoneySum.add(currentMoney);
         }
-        result.add(totalMoney.subtract(splitMoney));
+        result.add(totalMoney.subtract(splitMoneySum));
         Collections.shuffle(result);
         return result;
     }
@@ -100,19 +104,6 @@ public class RandomStrategy implements RedPacketsStrategy {
             allRandomWeight.remove(allRandomWeight.size() - 1);
             allRandomWeight.add(maxWeightLimit);
         }
-    }
-
-    /**
-     * 确保每一个红包金额不小于 RedPacketsConfig.MINIMUM_MONEY 。
-     *
-     * @param eachRedPacketsMoney
-     * @return
-     */
-    private BigDecimal ensureMinimum(BigDecimal eachRedPacketsMoney) {
-        if (eachRedPacketsMoney.compareTo(RedPacketsConfig.MIN_AVG_MONEY) < 0) {
-            eachRedPacketsMoney = RedPacketsConfig.MIN_AVG_MONEY;
-        }
-        return eachRedPacketsMoney;
     }
 
     @Override
