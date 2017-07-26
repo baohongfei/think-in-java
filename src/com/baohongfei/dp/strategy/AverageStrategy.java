@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ * 平均分配红包的策略。
+ * <p/>
  * Created by terry on 26/07/17.
  */
 public class AverageStrategy implements RedPacketsStrategy {
