@@ -13,7 +13,7 @@ public class Demo {
     public static void main(String[] args) {
 
         int totalMoney = 100;
-        int totalPeople = 3;
+        int totalPeople = 10;
 
         RedPacketsContext context = new RedPacketsContext();
 
