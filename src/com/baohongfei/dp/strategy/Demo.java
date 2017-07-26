@@ -15,14 +15,14 @@ public class Demo {
 
         RedPacketsContext context = new RedPacketsContext();
 
-        List<BigDecimal> averageStrategyResult = context.splitRedPackets(totalMoney, totalPeople);
-        System.out.println(totalPeople + "人,分" + totalMoney + "元,使用" + context.getStrategyName() + "策略,结果是" + averageStrategyResult);
+        List<BigDecimal> randomStrategyResult = context.splitRedPackets(totalMoney, totalPeople);
+        System.out.println(totalPeople + "人,分" + totalMoney + "元,使用" + context.getStrategyName() + "策略,结果是" + randomStrategyResult);
 
         RedPacketsStrategy averageStrategy = new AverageStrategy();
         context.replaceStrategy(averageStrategy);
 
-        List<BigDecimal> randomStrategyResult = context.splitRedPackets(totalMoney, totalPeople);
-        System.out.println(totalPeople + "人,分" + totalMoney + "元,使用" + context.getStrategyName() + "策略,结果是" + randomStrategyResult);
+        List<BigDecimal> averageStrategyResult = context.splitRedPackets(totalMoney, totalPeople);
+        System.out.println(totalPeople + "人,分" + totalMoney + "元,使用" + context.getStrategyName() + "策略,结果是" + averageStrategyResult);
 
     }
 }
