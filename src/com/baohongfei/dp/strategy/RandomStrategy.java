@@ -8,51 +8,109 @@ import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
 /**
+ * 加权随机算法策略
+ * 算法实现步骤：首先每个红包随机一个1到 RANDOM_RANGE 的数字作为自己的权值
+ * 再检查如果最大的权值如果占比超过最大允许占比权值，则调整最大权值为最大允许占比权值
+ * 然后按照权值分配红包
+ * <p/>
  * Created by terry on 26/07/17.
  */
 public class RandomStrategy implements RedPacketsStrategy {
 
     private static final String strategyName = "Random Strategy";
 
+    /**
+     * 每个红包随机一个1到 RANDOM_RANGE 的数字作为自己的权值
+     */
+    private static final int RANDOM_RANGE = 100;
 
-    private static final int RANGE = 2000;
+    public static final int WEIGHT_SCALE = 10;
 
-    private static final BigDecimal LUCKY_LIMIT = new BigDecimal("0.9");
 
     @Override
     public List<BigDecimal> splitRedPackets(BigDecimal totalMoney, int totalPeople) {
         List<BigDecimal> result = new ArrayList<>();
-        List<Integer> percentageNums = new ArrayList();
-        for (int i = 0; i < totalPeople; i++) {
-            int random = ThreadLocalRandom.current().nextInt(RANGE) + 1;
-            System.out.println(random);
-            percentageNums.add(random);
-        }
-        int percentageSum = 0;
-        for (Integer percent : percentageNums) {
-            percentageSum += percent;
-        }
 
-        Collections.sort(percentageNums);
+        // 给每一个红包计算一个权值
+        List<BigDecimal> randomWeight = getRandomWeight(totalPeople);
 
-        Integer maxPercent = percentageNums.get(totalPeople - 1);
 
-        if (maxPercent > LUCKY_LIMIT.multiply(new BigDecimal(percentageSum)).intValue()) {
-            int limitMaxPercent = 9 * (percentageSum - maxPercent);
-            percentageNums.remove(totalPeople - 1);
-            percentageNums.add(limitMaxPercent);
-            percentageSum = percentageSum - maxPercent + limitMaxPercent;
+        BigDecimal totalWeight = new BigDecimal(0);
+
+        for (BigDecimal weight : randomWeight) {
+            totalWeight = totalWeight.add(weight);
         }
 
-        BigDecimal splitMoney = new BigDecimal("0");
-        for (int i=0;i<totalPeople-1;i++){
-            BigDecimal currentMoney = totalMoney.multiply(new BigDecimal(percentageNums.get(i))).divide(new BigDecimal(percentageSum), SCALE, RoundingMode.DOWN);
+        Collections.reverse(randomWeight);
+        BigDecimal splitMoney = new BigDecimal(0);
+        for (int i = 0; i < randomWeight.size() -1 ; i++) {
+            BigDecimal currentMoney = totalMoney.multiply(randomWeight.get(i)).divide(totalWeight, RedPacketsConfig.MONEY_SCALE, RoundingMode.DOWN);
+            currentMoney = ensureMinimum(currentMoney);
             result.add(currentMoney);
-            splitMoney=splitMoney.add(currentMoney);
+            splitMoney = splitMoney.add(currentMoney);
         }
         result.add(totalMoney.subtract(splitMoney));
         Collections.shuffle(result);
         return result;
+    }
+
+    /**
+     * 给每个红包分配一个权值，按权值从小到大排列
+     *
+     * @param totalPeople 总人数
+     * @return
+     */
+    private List<BigDecimal> getRandomWeight(int totalPeople) {
+        List<BigDecimal> retRandomWeight = new ArrayList();
+        for (int i = 0; i < totalPeople; i++) {
+            int random = ThreadLocalRandom.current().nextInt(RANDOM_RANGE) + 1;
+            retRandomWeight.add(new BigDecimal(random));
+        }
+
+        Collections.sort(retRandomWeight);
+        ensureLuckyLimit(retRandomWeight);
+
+
+        return retRandomWeight;
+    }
+
+    /**
+     * 确保手气最佳红包的金额占总金额大小的比例，不大于 RedPacketsConfig.LUCKY_LIMIT
+     *
+     * @param allRandomWeight
+     */
+    private void ensureLuckyLimit(List<BigDecimal> allRandomWeight) {
+        BigDecimal totalWeight = new BigDecimal(0);
+        for (BigDecimal weight : allRandomWeight) {
+            totalWeight = totalWeight.add(weight);
+        }
+
+        BigDecimal maxWeight = allRandomWeight.get(allRandomWeight.size() - 1);
+
+        /**
+         * maxWeightLimit 表示手气最佳红包的最大权值能是多少
+         * maxWeightLimit 应该是多少？可以做如下推算
+         * RedPacketsConfig.LUCKY_LIMIT = maxWeightLimit / ((totalWeight-maxWeight)+maxWeightLimit)
+         * 由上面的公式可以推到出 maxWeightLimit = RedPacketsConfig.LUCKY_LIMIT / (1-RedPacketsConfig.LUCKY_LIMIT) *(totalWeight-maxWeight)
+         */
+        BigDecimal maxWeightLimit = RedPacketsConfig.LUCKY_LIMIT.divide(new BigDecimal(1).subtract(RedPacketsConfig.LUCKY_LIMIT), WEIGHT_SCALE, RoundingMode.DOWN).multiply(totalWeight.subtract(maxWeight));
+        if (maxWeight.compareTo(maxWeightLimit) > 0) {
+            allRandomWeight.remove(allRandomWeight.size() - 1);
+            allRandomWeight.add(maxWeightLimit);
+        }
+    }
+
+    /**
+     * 确保每一个红包金额不小于 RedPacketsConfig.MINIMUM_MONEY 。
+     *
+     * @param eachRedPacketsMoney
+     * @return
+     */
+    private BigDecimal ensureMinimum(BigDecimal eachRedPacketsMoney) {
+        if (eachRedPacketsMoney.compareTo(RedPacketsConfig.MINIMUM_MONEY) < 0) {
+            eachRedPacketsMoney = RedPacketsConfig.MINIMUM_MONEY;
+        }
+        return eachRedPacketsMoney;
     }
 
     @Override

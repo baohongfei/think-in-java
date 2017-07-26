@@ -13,11 +13,14 @@ public class AverageStrategy implements RedPacketsStrategy {
 
     private static final String strategyName = "Average Strategy";
 
-
     @Override
     public List<BigDecimal> splitRedPackets(BigDecimal totalMoney, int totalPeople) {
         List<BigDecimal> result = new ArrayList<>();
-        BigDecimal averageMoney = totalMoney.divide(new BigDecimal(totalPeople), SCALE, RoundingMode.DOWN);
+
+        // 每个红包平均分到的金额
+        BigDecimal averageMoney = totalMoney.divide(new BigDecimal(totalPeople), RedPacketsConfig.MONEY_SCALE, RoundingMode.DOWN);
+
+        // 最后一个红包的金额
         BigDecimal lastMoney = totalMoney.subtract(averageMoney.multiply(new BigDecimal(totalPeople - 1)));
         for (int i = 0; i < totalPeople - 1; i++) {
             result.add(averageMoney);
@@ -25,7 +28,6 @@ public class AverageStrategy implements RedPacketsStrategy {
         result.add(lastMoney);
         Collections.shuffle(result);
         return result;
-
     }
 
     @Override

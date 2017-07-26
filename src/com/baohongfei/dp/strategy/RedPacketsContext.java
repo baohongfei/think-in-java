@@ -11,6 +11,10 @@ public class RedPacketsContext {
 
     private RedPacketsStrategy redPacketsStrategy;
 
+    public RedPacketsContext() {
+        this.redPacketsStrategy = new RandomStrategy();
+    }
+
     public RedPacketsContext(RedPacketsStrategy redPacketsStrategy) {
         this.redPacketsStrategy = redPacketsStrategy;
     }
@@ -24,7 +28,14 @@ public class RedPacketsContext {
         List<BigDecimal> result = splitRedPackets(new BigDecimal(totalMoney), totalPeople);
         return result;
     }
-
+    /**
+     *
+     * 根据总金额、总人数分配红包
+     *
+     * @param totalMoney 总金额
+     * @param totalPeople 总人数
+     * @return 红包分配结果的 List
+     */
     public List<BigDecimal> splitRedPackets(float totalMoney, int totalPeople) {
         List<BigDecimal> result = splitRedPackets(new BigDecimal(totalMoney + ""), totalPeople);
         return result;

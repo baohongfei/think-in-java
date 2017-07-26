@@ -8,9 +8,16 @@ import java.util.List;
  */
 public interface RedPacketsStrategy {
 
-    static final int SCALE = 2;
 
-    List<BigDecimal> splitRedPackets(BigDecimal totalMoney,int totalPeople);
+    /**
+     *
+     * 根据总金额、总人数分配红包
+     *
+     * @param totalMoney 总金额
+     * @param totalPeople 总人数
+     * @return 红包分配结果的 List
+     */
+    List<BigDecimal> splitRedPackets(BigDecimal totalMoney, int totalPeople);
 
     String getStrategyName();
 }
