@@ -1,7 +1,7 @@
 package com.baohongfei.common;
 
 /**
- * Created by terry on 03/07/17.
+ * Created by hofer on 03/07/17.
  */
 public class CoinFlipping {
 
