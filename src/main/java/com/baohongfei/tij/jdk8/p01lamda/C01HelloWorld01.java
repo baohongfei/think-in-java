@@ -1,7 +1,4 @@
-package com.baohongfei.tij.jdk8.p01basic;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+package com.baohongfei.tij.jdk8.p01lamda;
 
 import javax.swing.*;
 

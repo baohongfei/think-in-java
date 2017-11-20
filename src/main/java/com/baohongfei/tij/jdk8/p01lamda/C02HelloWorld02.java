@@ -1,4 +1,4 @@
-package com.baohongfei.tij.jdk8.p01basic;
+package com.baohongfei.tij.jdk8.p01lamda;
 
 import java.util.Arrays;
 import java.util.List;
