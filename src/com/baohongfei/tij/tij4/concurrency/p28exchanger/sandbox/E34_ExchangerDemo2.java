@@ -91,17 +91,17 @@ public class E34_ExchangerDemo2
 
     public static void main(String[] args) throws Exception
     {
-        if (args.length > 0)
-            size = new Integer(args[0]);
-        if (args.length > 1)
-            delay = new Integer(args[1]);
-        ExecutorService exec = Executors.newCachedThreadPool();
-        Exchanger<List<Integer>> xc = new Exchanger<List<Integer>>();
-        List<Integer> producerList = new CopyOnWriteArrayList<Integer>(), consumerList = new CopyOnWriteArrayList<Integer>();
-        exec.execute(new ExchangerProducer<Integer>(xc,
-                new Integer(), producerList));
-        exec.execute(new ExchangerConsumer<java.lang.Integer>(xc, consumerList));
-        TimeUnit.SECONDS.sleep(delay);
-        exec.shutdownNow();
+        //if (args.length > 0)
+        //    size = new Integer(args[0]);
+        //if (args.length > 1)
+        //    delay = new Integer(args[1]);
+        //ExecutorService exec = Executors.newCachedThreadPool();
+        //Exchanger<List<Integer>> xc = new Exchanger<List<Integer>>();
+        //List<Integer> producerList = new CopyOnWriteArrayList<Integer>(), consumerList = new CopyOnWriteArrayList<Integer>();
+        //exec.execute(new ExchangerProducer<Integer>(xc,
+        //        new Integer(), producerList));
+        //exec.execute(new ExchangerConsumer<java.lang.Integer>(xc, consumerList));
+        //TimeUnit.SECONDS.sleep(delay);
+        //exec.shutdownNow();
     }
 }
