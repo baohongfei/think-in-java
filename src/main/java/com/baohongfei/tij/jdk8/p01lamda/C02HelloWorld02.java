@@ -27,5 +27,9 @@ public class C02HelloWorld02 {
             }
         });
 
+        list.forEach(integer -> System.out.println(integer));
+
+        list.forEach(System.out::println);
+
     }
 }
