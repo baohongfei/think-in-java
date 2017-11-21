@@ -20,6 +20,7 @@ public class C02HelloWorld02 {
             System.out.println(i);
         }
 
+        // forEach is a default method in interface
         list.forEach(new Consumer<Integer>() {
             @Override
             public void accept(Integer integer) {
@@ -29,6 +30,11 @@ public class C02HelloWorld02 {
 
         list.forEach(integer -> System.out.println(integer));
 
+        /**
+         * Note that instances of functional interfaces can be created with
+         * lambda expressions, method references, or constructor references.
+         */
+        //method references
         list.forEach(System.out::println);
 
     }
