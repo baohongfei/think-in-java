@@ -7,6 +7,16 @@ import java.util.List;
 /**
  * 2017/11/21 11:06 PM by hofer.bao
  */
+@FunctionalInterface
+interface TheInterface {
+    void myMethod();
+}
+
+@FunctionalInterface
+interface TheInterface2 {
+    void myMethod2();
+}
+
 public class C04FunctionalInterfaceAndStream {
     public static void main(String[] args) {
         TheInterface i1 = () -> {
@@ -34,17 +44,6 @@ public class C04FunctionalInterfaceAndStream {
         list.stream().map(String::toUpperCase).forEach(System.out::println);
 
 
-
-
     }
 }
 
-@FunctionalInterface
-interface TheInterface {
-    void myMethod();
-}
-
-@FunctionalInterface
-interface TheInterface2 {
-    void myMethod2();
-}
