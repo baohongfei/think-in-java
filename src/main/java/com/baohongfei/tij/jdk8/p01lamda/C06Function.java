@@ -26,6 +26,9 @@ public class C06Function {
 
         System.out.println(test.convert(3, value -> String.valueOf(value + "helloworld")));
 
+        Function<Integer, Integer> function = value -> value * 2;
+        System.out.println(test.compute(4, function));
+
 
     }
 }
