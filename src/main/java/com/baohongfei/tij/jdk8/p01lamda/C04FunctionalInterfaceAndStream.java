@@ -3,6 +3,7 @@ package com.baohongfei.tij.jdk8.p01lamda;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 2017/11/21 11:06 PM by hofer.bao
@@ -42,6 +43,11 @@ public class C04FunctionalInterfaceAndStream {
         list.stream().map(item -> item.toUpperCase()).forEach(item -> System.out.println(item));
 
         list.stream().map(String::toUpperCase).forEach(System.out::println);
+
+        // 方法引用
+        Function<String, String> function = String::toUpperCase;
+
+        System.out.println(function.getClass().getInterfaces()[0]);
 
 
     }
